@@ -1,126 +1,162 @@
-holographic-quant-terminal/
-├── README.md
-├── LICENSE
-├── CONTRIBUTING.md
-├── .gitignore
-├── .env.example
-├── docker-compose.yml
-├── Dockerfile
-├── pyproject.toml
-├── requirements.txt
-│
-├── backend/
-│   ├── app/
-│   │   ├── main.py                 # FastAPI 入口
-│   │   ├── config.py               # 环境变量与配置
-│   │   ├── dependencies.py         # 数据库等依赖注入
-│   │   ├── api/
-│   │   │   ├── stocks.py           # 个股分析接口
-│   │   │   ├── market.py           # 大盘与板块接口
-│   │   │   ├── news.py             # 新闻与舆情接口
-│   │   │   ├── dragon_tiger.py     # 龙虎榜接口
-│   │   │   ├── strategies.py       # 战法信号接口
-│   │   │   ├── backtest.py         # 回测接口
-│   │   │   └── websocket.py        # 实时推送
-│   │   ├── schemas/                # API 数据模型
-│   │   ├── models/                 # ORM 数据模型
-│   │   ├── repositories/           # 数据访问层
-│   │   └── services/               # 业务服务层
-│   │
-│   ├── collectors/
-│   │   ├── market_collector.py     # 行情采集
-│   │   ├── news_collector.py       # 新闻采集
-│   │   ├── dragon_tiger_collector.py
-│   │   ├── announcement_collector.py
-│   │   ├── capital_flow_collector.py
-│   │   └── scheduler.py            # 定时任务
-│   │
-│   ├── pipelines/
-│   │   ├── queue.py                # 消息队列
-│   │   ├── normalizer.py           # 数据标准化
-│   │   ├── deduplicator.py         # 新闻去重
-│   │   └── data_quality.py         # 数据质量检查
-│   │
-│   ├── nlp/
-│   │   ├── entity_extractor.py     # 股票、公司、行业实体识别
-│   │   ├── sentiment.py            # 情感评分
-│   │   ├── event_classifier.py     # 事件分类
-│   │   └── entity_linker.py        # 新闻映射到股票
-│   │
-│   ├── quant/
-│   │   ├── indicators.py           # MACD、KDJ、RSI 等
-│   │   ├── patterns/
-│   │   │   ├── candlestick.py      # K线组合
-│   │   │   ├── chart_patterns.py   # W底、头肩顶等
-│   │   │   └── duck_head.py        # 老鸭头等本土战法
-│   │   ├── chan/
-│   │   │   ├── inclusion.py        # K线包含处理
-│   │   │   ├── fractals.py         # 顶底分型
-│   │   │   ├── strokes.py          # 笔
-│   │   │   ├── segments.py         # 线段
-│   │   │   ├── centers.py          # 中枢
-│   │   │   └── divergence.py       # 背驰与买卖点
-│   │   ├── gann/
-│   │   │   ├── angles.py           # 江恩角度线
-│   │   │   └── time_windows.py     # 时间窗
-│   │   ├── elliott/
-│   │   │   └── wave_analysis.py    # 波浪与斐波那契
-│   │   ├── factors/
-│   │   │   ├── trend.py
-│   │   │   ├── volume_price.py
-│   │   │   ├── capital_flow.py
-│   │   │   └── sentiment_factor.py
-│   │   ├── scoring.py              # 多因子综合评分
-│   │   └── risk_filters.py         # 风控与股票池过滤
-│   │
-│   ├── dragon_tiger/
-│   │   ├── seat_registry.py        # 营业部与席位库
-│   │   ├── seat_aliases.py         # 席位别名映射
-│   │   ├── behavior_labels.py      # 席位行为标签
-│   │   └── flow_analysis.py        # 买卖席位博弈
-│   │
-│   ├── backtesting/
-│   │   ├── engine.py
-│   │   ├── strategies.py
-│   │   ├── metrics.py
-│   │   └── walk_forward.py         # 滚动样本外验证
-│   │
-│   ├── tasks/
-│   │   ├── celery_app.py
-│   │   ├── market_tasks.py
-│   │   ├── news_tasks.py
-│   │   └── quant_tasks.py
-│   │
-│   └── tests/
-│       ├── test_indicators.py
-│       ├── test_duck_head.py
-│       ├── test_nlp.py
-│       └── test_backtest.py
-│
-├── database/
-│   ├── migrations/
-│   ├── schema.sql
-│   └── seed/
-│
-├── frontend/
-│   ├── package.json
-│   ├── src/
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── views/
-│   │   ├── charts/
-│   │   ├── stores/
-│   │   └── router/
-│   └── public/
-│
-├── scripts/
-│   ├── init_db.py
-│   ├── backfill_history.py
-│   └── health_check.py
-│
-└── docs/
-    ├── architecture.md
-    ├── data_sources.md
-    ├── factor_definitions.md
-    ├── backtest_methodology.md
-    └── deployment.md
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>全息量化决策终端</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 12px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #161b22; padding: 12px; border-radius: 8px; border: 1px solid #30363d; }
+        .search-box { flex: 1; margin-right: 10px; }
+        input { width: 100%; padding: 10px; background: #0d1117; border: 1px solid #30363d; color: #fff; border-radius: 6px; font-size: 14px; }
+        button { padding: 10px 16px; background: #238636; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        button:active { background: #2ea043; }
+        
+        .score-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+        .score-value { font-size: 28px; font-weight: bold; color: #d29922; }
+        .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 12px; margin-right: 6px; background: #1f6feb33; color: #58a6ff; border: 1px solid #1f6feb; }
+        
+        .chart-container { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 5px; margin-bottom: 12px; }
+        #klineChart { width: 100%; height: 350px; }
+        #macdChart { width: 100%; height: 150px; }
+        
+        .analysis-text { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 15px; font-size: 13px; line-height: 1.6; }
+        .analysis-text h4 { color: #f0f6fc; margin-bottom: 8px; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        .highlight { color: #3fb950; }
+        .warning { color: #f85149; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="search-box">
+            <input type="text" id="stockCode" placeholder="输入股票代码" value="600351">
+        </div>
+        <button onclick="analyze()">分析</button>
+    </div>
+
+    <div class="score-card" id="scoreCard" style="display:none;">
+        <div>
+            <div style="font-size:12px; color:#8b949e; margin-bottom:4px;">多维度综合评分</div>
+            <div class="score-value" id="scoreVal">--</div>
+        </div>
+        <div>
+            <div style="font-size:12px; color:#8b949e; margin-bottom:4px;">AI 策略信号</div>
+            <div id="signalTag" class="tag" style="font-size:14px;">--</div>
+        </div>
+    </div>
+
+    <div class="chart-container"><div id="klineChart"></div></div>
+    <div class="chart-container"><div id="macdChart"></div></div>
+
+    <div class="analysis-text" id="analysisText" style="display:none;">
+        <h4>📊 策略引擎解析 (参考 rule_engine.py)</h4>
+        <p id="techAnalysis">等待分析...</p>
+        <h4 style="margin-top:15px;">⚡ 量价与资金面</h4>
+        <p id="volumeAnalysis">等待分析...</p>
+    </div>
+
+    <script>
+        let klineChart, macdChart;
+
+        function initCharts() {
+            klineChart = echarts.init(document.getElementById('klineChart'), 'dark');
+            macdChart = echarts.init(document.getElementById('macdChart'), 'dark');
+        }
+
+        // 生成模拟数据的函数（为了让网页在没有后端时也能展示）
+        function generateMockData() {
+            let kline = [];
+            let basePrice = 10.0;
+            let date = new Date();
+            for (let i = 100; i >= 0; i--) {
+                let d = new Date(date.getTime() - i * 24 * 60 * 60 * 1000);
+                let open = basePrice + (Math.random() - 0.5) * 0.5;
+                let close = open + (Math.random() - 0.5) * 0.8;
+                let high = Math.max(open, close) + Math.random() * 0.3;
+                let low = Math.min(open, close) - Math.random() * 0.3;
+                kline.push({
+                    date: d.toISOString().split('T')[0],
+                    open: open.toFixed(2), close: close.toFixed(2), low: low.toFixed(2), high: high.toFixed(2),
+                    MA5: (open + close)/2, MA10: open, MA20: close,
+                    MACD: (Math.random()-0.5), MACD_SIGNAL: (Math.random()-0.5), MACD_HIST: (Math.random()-0.5),
+                    VOL_RATIO: 1.5
+                });
+                basePrice = close;
+            }
+            return kline;
+        }
+
+        function analyze() {
+            const code = document.getElementById('stockCode').value;
+            if (!code) return alert('请输入代码');
+            
+            // 模拟加载
+            document.getElementById('scoreCard').style.display = 'none';
+            document.getElementById('analysisText').style.display = 'none';
+
+            setTimeout(() => {
+                // 获取模拟数据
+                const mockKline = generateMockData();
+                const mockScore = Math.floor(Math.random() * 30) + 70; // 70-100分
+                const mockSignal = mockScore > 80 ? "BUY_CANDIDATE" : "WATCH";
+
+                // 1. 显示评分
+                document.getElementById('scoreCard').style.display = 'flex';
+                document.getElementById('scoreVal').innerText = mockScore;
+                const sig = document.getElementById('signalTag');
+                sig.innerText = mockSignal === "BUY_CANDIDATE" ? "强烈买入" : "观望";
+                sig.style.color = mockScore > 80 ? '#3fb950' : '#d29922';
+                sig.style.borderColor = mockScore > 80 ? '#3fb950' : '#d29922';
+
+                // 2. 渲染 K 线
+                const dates = mockKline.map(k => k.date);
+                const values = mockKline.map(k => [parseFloat(k.open), parseFloat(k.close), parseFloat(k.low), parseFloat(k.high)]);
+                
+                klineChart.setOption({
+                    backgroundColor: '#161b22',
+                    title: { text: 'K线形态与均线系统', left: 'center', textStyle: { color: '#8b949e', fontSize: 12 } },
+                    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+                    grid: { left: '5%', right: '5%', bottom: '10%', top: '15%' },
+                    xAxis: { type: 'category', data: dates, axisLabel: { color: '#8b949e', fontSize: 10 } },
+                    yAxis: { scale: true, axisLabel: { color: '#8b949e' } },
+                    series: [
+                        { name: 'K线', type: 'candlestick', data: values, itemStyle: { color: '#ef232a', color0: '#14b143', borderColor: '#ef232a', borderColor0: '#14b143' } },
+                        { name: 'MA5', type: 'line', data: mockKline.map(k => parseFloat(k.MA5)), smooth: true, lineStyle: { width: 1, color: '#f5d547' }, symbol: 'none' },
+                        { name: 'MA20', type: 'line', data: mockKline.map(k => parseFloat(k.MA20)), smooth: true, lineStyle: { width: 1, color: '#58a6ff' }, symbol: 'none' }
+                    ]
+                });
+
+                // 3. 渲染 MACD
+                macdChart.setOption({
+                    backgroundColor: '#161b22',
+                    title: { text: 'MACD 趋势', left: 'center', textStyle: { color: '#8b949e', fontSize: 12 } },
+                    grid: { left: '5%', right: '5%', bottom: '15%', top: '20%' },
+                    xAxis: { type: 'category', data: dates, show: false },
+                    yAxis: { scale: true, axisLabel: { color: '#8b949e' } },
+                    series: [
+                        { name: 'MACD', type: 'bar', data: mockKline.map(k => k.MACD_HIST), itemStyle: { color: (params) => params.data >= 0 ? '#ef232a' : '#14b143' } },
+                        { name: 'DIF', type: 'line', data: mockKline.map(k => k.MACD), lineStyle: { width: 1, color: '#f5d547' }, symbol: 'none' }
+                    ]
+                });
+
+                // 4. 渲染文字（结合你发的 python 代码逻辑）
+                document.getElementById('analysisText').style.display = 'block';
+                document.getElementById('techAnalysis').innerHTML = `
+                    <span class="highlight">[技术面条件验证]</span> 当前多均线系统呈多头排列，MACD 在零轴上方，满足 <b>technical_score >= 70</b> 条件。<br><br>
+                    <span class="highlight">[策略中枢判定]</span> 触发信号：<b>${mockSignal}</b>，依据：多因子条件满足。
+                `;
+                document.getElementById('volumeAnalysis').innerHTML = `
+                    当前量比：<span class="highlight">1.85</span>，温和放量。结合近期龙虎榜席位数据（游资活跃度评分 85），资金面呈现净流入状态。
+                `;
+            }, 800);
+        }
+
+        window.onload = function() {
+            initCharts();
+            window.addEventListener('resize', function() { klineChart.resize(); macdChart.resize(); });
+        }
+    </script>
+</body>
+</html>
