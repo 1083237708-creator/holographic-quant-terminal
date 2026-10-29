@@ -1,0 +1,126 @@
+holographic-quant-terminal/
+├── README.md
+├── LICENSE
+├── CONTRIBUTING.md
+├── .gitignore
+├── .env.example
+├── docker-compose.yml
+├── Dockerfile
+├── pyproject.toml
+├── requirements.txt
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py                 # FastAPI 入口
+│   │   ├── config.py               # 环境变量与配置
+│   │   ├── dependencies.py         # 数据库等依赖注入
+│   │   ├── api/
+│   │   │   ├── stocks.py           # 个股分析接口
+│   │   │   ├── market.py           # 大盘与板块接口
+│   │   │   ├── news.py             # 新闻与舆情接口
+│   │   │   ├── dragon_tiger.py     # 龙虎榜接口
+│   │   │   ├── strategies.py       # 战法信号接口
+│   │   │   ├── backtest.py         # 回测接口
+│   │   │   └── websocket.py        # 实时推送
+│   │   ├── schemas/                # API 数据模型
+│   │   ├── models/                 # ORM 数据模型
+│   │   ├── repositories/           # 数据访问层
+│   │   └── services/               # 业务服务层
+│   │
+│   ├── collectors/
+│   │   ├── market_collector.py     # 行情采集
+│   │   ├── news_collector.py       # 新闻采集
+│   │   ├── dragon_tiger_collector.py
+│   │   ├── announcement_collector.py
+│   │   ├── capital_flow_collector.py
+│   │   └── scheduler.py            # 定时任务
+│   │
+│   ├── pipelines/
+│   │   ├── queue.py                # 消息队列
+│   │   ├── normalizer.py           # 数据标准化
+│   │   ├── deduplicator.py         # 新闻去重
+│   │   └── data_quality.py         # 数据质量检查
+│   │
+│   ├── nlp/
+│   │   ├── entity_extractor.py     # 股票、公司、行业实体识别
+│   │   ├── sentiment.py            # 情感评分
+│   │   ├── event_classifier.py     # 事件分类
+│   │   └── entity_linker.py        # 新闻映射到股票
+│   │
+│   ├── quant/
+│   │   ├── indicators.py           # MACD、KDJ、RSI 等
+│   │   ├── patterns/
+│   │   │   ├── candlestick.py      # K线组合
+│   │   │   ├── chart_patterns.py   # W底、头肩顶等
+│   │   │   └── duck_head.py        # 老鸭头等本土战法
+│   │   ├── chan/
+│   │   │   ├── inclusion.py        # K线包含处理
+│   │   │   ├── fractals.py         # 顶底分型
+│   │   │   ├── strokes.py          # 笔
+│   │   │   ├── segments.py         # 线段
+│   │   │   ├── centers.py          # 中枢
+│   │   │   └── divergence.py       # 背驰与买卖点
+│   │   ├── gann/
+│   │   │   ├── angles.py           # 江恩角度线
+│   │   │   └── time_windows.py     # 时间窗
+│   │   ├── elliott/
+│   │   │   └── wave_analysis.py    # 波浪与斐波那契
+│   │   ├── factors/
+│   │   │   ├── trend.py
+│   │   │   ├── volume_price.py
+│   │   │   ├── capital_flow.py
+│   │   │   └── sentiment_factor.py
+│   │   ├── scoring.py              # 多因子综合评分
+│   │   └── risk_filters.py         # 风控与股票池过滤
+│   │
+│   ├── dragon_tiger/
+│   │   ├── seat_registry.py        # 营业部与席位库
+│   │   ├── seat_aliases.py         # 席位别名映射
+│   │   ├── behavior_labels.py      # 席位行为标签
+│   │   └── flow_analysis.py        # 买卖席位博弈
+│   │
+│   ├── backtesting/
+│   │   ├── engine.py
+│   │   ├── strategies.py
+│   │   ├── metrics.py
+│   │   └── walk_forward.py         # 滚动样本外验证
+│   │
+│   ├── tasks/
+│   │   ├── celery_app.py
+│   │   ├── market_tasks.py
+│   │   ├── news_tasks.py
+│   │   └── quant_tasks.py
+│   │
+│   └── tests/
+│       ├── test_indicators.py
+│       ├── test_duck_head.py
+│       ├── test_nlp.py
+│       └── test_backtest.py
+│
+├── database/
+│   ├── migrations/
+│   ├── schema.sql
+│   └── seed/
+│
+├── frontend/
+│   ├── package.json
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── views/
+│   │   ├── charts/
+│   │   ├── stores/
+│   │   └── router/
+│   └── public/
+│
+├── scripts/
+│   ├── init_db.py
+│   ├── backfill_history.py
+│   └── health_check.py
+│
+└── docs/
+    ├── architecture.md
+    ├── data_sources.md
+    ├── factor_definitions.md
+    ├── backtest_methodology.md
+    └── deployment.md
